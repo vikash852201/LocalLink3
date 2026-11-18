@@ -26,7 +26,7 @@ Install the Flutter SDK and platform toolchains, then generate the Android proje
 ```bash
 flutter create --platforms=android --org com.example --project-name locallink build/locallink
 cp pubspec.yaml build/locallink/pubspec.yaml
-cp -R lib build/locallink/lib
+cp -R lib/. build/locallink/lib/
 cp android/app/src/main/AndroidManifest.xml build/locallink/android/app/src/main/AndroidManifest.xml
 mkdir -p build/locallink/android/app/src/main/kotlin/com/example/locallink
 cp android/app/src/main/kotlin/com/example/locallink/MainActivity.kt build/locallink/android/app/src/main/kotlin/com/example/locallink/MainActivity.kt
