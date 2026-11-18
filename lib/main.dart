@@ -175,7 +175,11 @@ class LocalLinkService extends ChangeNotifier {
   }
 
   void _handleIncomingSocket(Socket socket) {
-    socket.transform(utf8.decoder).transform(const LineSplitter()).listen((line) {
+    socket
+        .cast<List<int>>()
+        .transform(utf8.decoder)
+        .transform(const LineSplitter())
+        .listen((line) {
       _receiveMessage(line);
     }, onError: (_) {}, onDone: () => socket.destroy());
   }
