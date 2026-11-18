@@ -1,0 +1,41 @@
+name: Build Android APK
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Generate Android project and build APK
+        run: |
+          flutter create --platforms=android --org com.example --project-name locallink build/locallink
+          cp pubspec.yaml build/locallink/pubspec.yaml
+          cp -R lib build/locallink/lib
+          cp android/app/src/main/AndroidManifest.xml build/locallink/android/app/src/main/AndroidManifest.xml
+          mkdir -p build/locallink/android/app/src/main/kotlin/com/example/locallink
+          cp android/app/src/main/kotlin/com/example/locallink/MainActivity.kt build/locallink/android/app/src/main/kotlin/com/example/locallink/MainActivity.kt
+          cd build/locallink
+          flutter pub get
+          flutter build apk --release
+
+      - name: Upload release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: locallink-release-apk
+          path: build/locallink/build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
